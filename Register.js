@@ -30,19 +30,18 @@ class Owner {
 		return this._phone;
 	}
 }
-let ID = 0;
 
 class Animal {
+	static count = 0;
 	constructor(owner, id) {
 		// if no parameters are specified
 		if (id === undefined) {
-			this._id = ID;
-			ID++;
+			this._id = this.count++;
 		}
 		// if ID is not a number
 		else if (isNaN(id)) throw new Error('ID needs to be a number');
 		else {
-			while (id <= ID) id++;
+			while (id <= this.count) id++;
 			this._id = id;
 		}
 
