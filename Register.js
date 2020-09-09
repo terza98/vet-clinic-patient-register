@@ -1,6 +1,7 @@
 'use strict';
 
 class Owner {
+	// accepts owner name, surname and phone all parameters are important and if left blank they throw errors
 	constructor(name, surname, phone) {
 		//if no parameters are present show errors
 		if (name === undefined) throw new Error('Name cannot be blank!');
@@ -33,6 +34,7 @@ class Owner {
 
 class Animal {
 	static count = 0;
+	// accepts owner and ID as parameters; owner is required to build instance of this class
 	constructor(owner, id) {
 		// if no parameters are specified
 		if (id === undefined) {
@@ -41,6 +43,8 @@ class Animal {
 		// if ID is not a number
 		else if (isNaN(id)) throw new Error('ID needs to be a number');
 		else {
+			// increasing id that's specified until it becomes bigger than the count,
+			// because all others before it are assigned to the animals
 			while (id <= this.count) id++;
 			this._id = id;
 		}
@@ -94,6 +98,7 @@ class Animal {
 }
 class Examination {
 	//accepts id of the patient, and illness and medical condition diagnoses after the examination is done
+	//id is only required parameter since the examination may have a good outcome and patient doesn't have any illness or condition
 	constructor(id, illness, medicalCondition) {
 		// if no paramaeters are specified
 		if (id === undefined)
@@ -148,16 +153,19 @@ class Examination {
 }
 
 class Register {
+	// no required parameters, can be created with animals and examinations as params as well
 	constructor(animals, examinations) {
 		if (animals === undefined) this._animals = [];
-		else if (Array.isArray(animals) && typeof animals !== 'object')
-			throw new Error('Animals type needs to be an array!');
-		else this._animals = animals;
+		else if (Array.isArray(animals)) this._animals = [...animals];
+		else if (typeof animals === 'object') this._animals = animals;
+		else throw new Error('Invalid type of animals parameter');
 
 		if (examinations === undefined) this._examinations = [];
 		else if (Array.isArray(examinations))
-			throw new Error('Examinations type needs to be an array!');
-		else this._examinations = [...examinations];
+			this._examinations = [...examinations];
+		else if (typeof examinations === 'object')
+			this._examinations = this.examinations;
+		else throw new Error('Invalid type of examination parameter');
 	}
 
 	get animals() {
@@ -248,6 +256,12 @@ const examination2 = new Examination(
 	['Med Cond 2, Med Cond 3'],
 );
 const examination3 = new Examination(1, 'New Illness 3', 'Med Condition 3');
+
+// testing register creation with parameters
+let register2 = new Register(animal1, examination1);
+
+// this throws an error:
+// let register2 = new Register('animal1', examination1);
 
 register.addNewExamination(examination1);
 // this adds more than 1 illness and med cond as an array
